@@ -7,9 +7,26 @@ const AutoLoad = require('@fastify/autoload');
 module.exports.options = {};
 
 module.exports = async function (fastify, opts) {
-	// Place here your custom code!
+	await fastify.register(require('@fastify/env'), {
+		confKey: 'config',
+		schema: {
+			type: 'object',
+			required: ['PORT', 'DB'],
+			properties: {
+				PORT: {
+					type: 'string',
+					default: 3000,
+				},
+				DB: {
+					type: 'string'
+				},
+			},
+		},
+	});
 
-	// Do not touch the following lines
+	fastify.register(require('@fastify/mongodb'), {
+		url: fastify.config.DB,
+	});
 
 	// This loads all plugins defined in plugins
 	// those should be support plugins that are reused
@@ -24,9 +41,5 @@ module.exports = async function (fastify, opts) {
 	fastify.register(AutoLoad, {
 		dir: path.join(__dirname, 'routes'),
 		options: Object.assign({}, opts),
-	});
-
-	fastify.register(require('@fastify/mongodb'), {
-		url: 'mongodb+srv://develop:develop@kcdhackaton.pp4lbh5.mongodb.net/kcd?retryWrites=true&w=majority&authSource=admin',
 	});
 };

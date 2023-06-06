@@ -7,9 +7,6 @@ module.exports = async function (fastify, opts) {
 		const patientExists = this.validateUser(image);
 		if (!patientExists) throw new Error('USER_NOT_FOUND');
 		const patientId = new this.mongo.ObjectId(patientExists);
-		console.log('----------------------------');
-		console.log(patientExists);
-		console.log(patientId);
 		const patients = this.mongo.db.collection('patients');
 		const records = this.mongo.db.collection('records');
 		let data = {};
