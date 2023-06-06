@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-rekognition": "^3.345.0",
     "@fastify/autoload": "^5.0.0",
     "@fastify/env": "^4.2.0",
     "@fastify/mongodb": "^7.0.0",
