@@ -32,13 +32,13 @@ const createCollection = async (collectionName) => {
   }
 };
 
-const saveImage = async (collectionName, imageName) => {
+const saveImage = async (collectionName, imageName, id) => {
   try {
     const data = await rekogClient.send(
       new IndexFacesCommand({
         CollectionId: collectionName,
         Image: { Bytes: fs.readFileSync(imageName) },
-        ExternalImageId: "647edfbe46bf470a1a36192e",
+        ExternalImageId: id,
       })
     );
     console.log("Faces indexed:");
@@ -65,5 +65,5 @@ const findByImage = async (collectionName, imageName) => {
 };
 
 //createCollection(collectionName);
-//saveImage(collectionName, "./edi.jpeg");
+saveImage(collectionName, "./deivid.jpeg", "647f83321043078fc1cf1ab7");
 //findByImage(collectionName, "./edi2.jpeg");
