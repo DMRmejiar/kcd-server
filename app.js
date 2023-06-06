@@ -18,10 +18,22 @@ module.exports = async function (fastify, opts) {
 					default: 3000,
 				},
 				DB: {
-					type: 'string'
+					type: 'string',
 				},
 			},
 		},
+	});
+
+	fastify.register(require('@fastify/cors'), (instance) => {
+		return (req, callback) => {
+			const corsOptions = {
+				origin: true,
+			};
+			if (/^localhost$/m.test(req.headers.origin)) {
+				corsOptions.origin = false;
+			}
+			callback(null, corsOptions);
+		};
 	});
 
 	fastify.register(require('@fastify/mongodb'), {

@@ -4,7 +4,7 @@ module.exports = async function (fastify, opts) {
 	fastify.post('/', async function (request, reply) {
 		const image = request.body.image;
 		if (!image) throw new Error('MISSING_PARAMS');
-		const patientExists = this.validateUser(image);
+		const patientExists = await this.validateUser(image);
 		if (!patientExists) throw new Error('USER_NOT_FOUND');
 		const patientId = new this.mongo.ObjectId(patientExists);
 		const patients = this.mongo.db.collection('patients');
@@ -16,33 +16,39 @@ module.exports = async function (fastify, opts) {
 			});
 			if (!patient) throw new Error('PATIENT_NOT_FOUND');
 			data = {
+				id: patient._id,
 				name: patient.name,
 				document: patient.document,
 				documentType: patient.documentType,
 				history: [],
 			};
-			data.history = await records
-				.aggregate([
-					{ $match: { patient: patientId } },
-					{ $sort: { _id: -1 } },
-					{
-						$lookup: {
-							from: 'physicians',
-							localField: 'physician',
-							foreignField: '_id',
-							as: 'physician',
+			data.history = (
+				await records
+					.aggregate([
+						{ $match: { patient: patientId } },
+						{ $sort: { _id: -1 } },
+						{
+							$lookup: {
+								from: 'physicians',
+								localField: 'physician',
+								foreignField: '_id',
+								as: 'physician',
+							},
 						},
-					},
-					{ $unwind: { path: '$physician' } },
-					{
-						$project: {
-							message: 1,
-							createdAt: 1,
-							physician: '$physician.name',
+						{ $unwind: { path: '$physician' } },
+						{
+							$project: {
+								message: 1,
+								createdAt: 1,
+								physician: '$physician.name',
+							},
 						},
-					},
-				])
-				.toArray();
+					])
+					.toArray()
+			).map((item) => {
+				delete item._id;
+				return item;
+			});
 		} catch (error) {
 			console.error(error);
 			throw new Error(error);
