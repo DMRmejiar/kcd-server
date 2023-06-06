@@ -23,7 +23,8 @@
     "@fastify/sensible": "^5.0.0",
     "fastify": "^4.0.0",
     "fastify-cli": "^5.7.1",
-    "fastify-plugin": "^4.0.0"
+    "fastify-plugin": "^4.0.0",
+    "web3": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22",
