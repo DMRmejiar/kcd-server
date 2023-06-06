@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kcd-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kcd-server
+  template:
+    metadata:
+      labels:
+        app: kcd-server
+    spec:
+      containers:
+        - name: kcd-server
+          image: public.ecr.aws/f1a4q5b7/kcd-server:latest
+          ports:
+            - containerPort: 3000
