@@ -11,15 +11,28 @@ module.exports = async function (fastify, opts) {
 		confKey: 'config',
 		schema: {
 			type: 'object',
-			required: ['PORT', 'DB'],
+			required: [
+				'PORT',
+				'DB',
+				'POLYGON_ADDRESS_CONTRACT',
+				'POLYGON_ADDRESS_USER',
+				'POLYGON_PRIVATE_KEY',
+				'WEB3_URL',
+				'AWS_KEY_ID',
+				'AWS_ACCESS_KEY',
+				'AWS_REGION',
+				'AWS_COLLECTION',
+			],
 			properties: {
 				PORT: {
 					type: 'string',
 					default: 3000,
 				},
-				DB: {
-					type: 'string',
-				},
+				DB: { type: 'string' },
+				POLYGON_ADDRESS_CONTRACT: { type: 'string' },
+				POLYGON_ADDRESS_USER: { type: 'string' },
+				POLYGON_PRIVATE_KEY: { type: 'string' },
+				WEB3_URL: { type: 'string' },
 			},
 		},
 	});
@@ -40,16 +53,11 @@ module.exports = async function (fastify, opts) {
 		url: fastify.config.DB,
 	});
 
-	// This loads all plugins defined in plugins
-	// those should be support plugins that are reused
-	// through your application
 	fastify.register(AutoLoad, {
 		dir: path.join(__dirname, 'plugins'),
 		options: Object.assign({}, opts),
 	});
 
-	// This loads all plugins defined in routes
-	// define your routes in one of these
 	fastify.register(AutoLoad, {
 		dir: path.join(__dirname, 'routes'),
 		options: Object.assign({}, opts),

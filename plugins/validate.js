@@ -4,14 +4,13 @@ const {
   SearchFacesByImageCommand,
   RekognitionClient,
 } = require("@aws-sdk/client-rekognition");
-const fs = require("fs");
-const REGION = "us-east-1";
+
 const collectionName = "kcd-collection";
 const rekogClient = new RekognitionClient({
-  region: REGION,
+  region: fastify.config.AWS_REGION,
   credentials: {
-    accessKeyId: "AKIARCGSWNIGFKKYFZON",
-    secretAccessKey: "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",
+    accessKeyId: fastify.config.AWS_KEY_ID,
+    secretAccessKey:  fastify.config.AWS_ACCESS_KEY,
   },
 });
 
@@ -20,7 +19,7 @@ module.exports = fp(async function (fastify, opts) {
     const imageBuffer = Buffer.from(image, "base64");
     const data = await rekogClient.send(
       new SearchFacesByImageCommand({
-        CollectionId: collectionName,
+        CollectionId: fastify.config.AWS_COLLECTION,
         Image: { Bytes: imageBuffer },
       })
     );
